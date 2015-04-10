@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00000000</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+
+
+    <color name="text_40">#ababab</color>
+    <color name="text_60">#999999</color>
+    <color name="text_80">#484848</color>
+    <color name="text_100">#3f3f3f</color>
+
+    <color name="gray_50">#fafafa</color>
+    <color name="gray_100">#f5f5f5</color>
+    <color name="gray_200">#eeeeee</color>
+    <color name="gray_300">#e0e0e0</color>
+    <color name="gray_400">#dbdbdb</color>
+    <color name="gray_500">#9e9e9e</color>
+    <color name="gray_600">#757575</color>
+    <color name="gray_700">#616161</color>
+    <color name="gray_800">#424242</color>
+    <color name="gray_900">#212121</color>
+    <color name="gray_1000">#000000</color>
+
+    <color name="primary_100">#c5cae9</color>
+    <color name="primary_500">#3f51b5</color>
+    <color name="primary_700">#303f9f</color>
+    <color name="primary_theme">#4285F4</color>
+    <color name="theme">#4285F4</color>
+    <color name="theme_p">#2f5faf</color>
+
+
+    <color name="dialog_btn_text_positive">#53ACF3</color>
+    <color name="dialog_btn_text_negative">#757575</color>
+    <color name="dialog_title_text">#424242</color>
+
+
+    <color name="divider">#ababab</color>
+
+
+</resources>

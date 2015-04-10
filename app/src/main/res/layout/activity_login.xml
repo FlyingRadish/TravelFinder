@@ -1,0 +1,102 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.8">
+
+        <ImageView
+
+            android:id="@+id/img_icon"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/duang"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/text_app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/img_icon"
+            android:layout_marginTop="16dp"
+            android:text="桂智旅行"
+            android:textSize="52dp" />
+
+
+        <TextView
+            android:id="@+id/text_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/text_app_name"
+            android:layout_alignRight="@id/text_app_name"
+            android:text="让游客无处可逃"
+            android:textSize="20dp" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.6">
+
+        <EditText
+            android:id="@+id/edit_user_name"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/edit_user_name"
+            android:layout_alignBaseline="@id/edit_user_name"
+            android:textSize="16sp"
+            android:text="用户名"/>
+
+        <EditText
+            android:id="@+id/edit_password"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_user_name"
+            android:layout_marginTop="16dp"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/edit_password"
+            android:layout_alignBaseline="@id/edit_password"
+            android:textSize="16sp"
+            android:text="密码"/>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:layout_centerHorizontal="true"
+            android:text="登录"
+            android:textSize="20sp"
+            />
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,19 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="title_button_width">50dp</dimen>
+    <dimen name="textsize_112">112sp</dimen>
+    <dimen name="textsize_56">56sp</dimen>
+    <dimen name="textsize_45">45sp</dimen>
+    <dimen name="textsize_34">34sp</dimen>
+    <dimen name="textsize_20">20sp</dimen>
+    <dimen name="textsize_16">16sp</dimen>
+    <dimen name="textsize_14">14sp</dimen>
+    <dimen name="textsize_12">12sp</dimen>
+    <dimen name="textsize_10">10sp</dimen>
+    <dimen name="dialog_btn_textsize">20dp</dimen>
+    <dimen name="dialog_message_textsize">16dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="title_action_text_size">20sp</dimen>
+
+</resources>

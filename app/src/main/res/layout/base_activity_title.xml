@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:background="@color/theme"
+    android:elevation="1dp">
+
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="52dp"
+        android:layout_height="match_parent"
+        android:background="@color/selector_btn_title"
+        android:text="返"
+        android:textSize="@dimen/title_action_text_size"
+        android:textColor="@color/white"
+        />
+
+    <TextView
+        android:id="@+id/text_activity_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/app_name"
+        android:textSize="25sp"
+        android:textColor="@color/white" />
+
+    <LinearLayout
+        android:id="@+id/panel_title_right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/text_activity_title"
+        android:layout_marginLeft="12dp"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:elevation="1dp">
+
+        </LinearLayout>
+
+</RelativeLayout>
