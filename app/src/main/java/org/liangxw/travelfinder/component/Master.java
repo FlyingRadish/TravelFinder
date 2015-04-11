@@ -5,7 +5,9 @@ import android.widget.Toast;
 
 
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVUser;
 
+import org.liangxw.travelfinder.model.User;
 import org.liangxw.travelfinder.util.logger.Log;
 
 import de.greenrobot.event.EventBus;
@@ -38,13 +40,13 @@ public class Master extends Application implements Thread.UncaughtExceptionHandl
     public void onCreate() {
         super.onCreate();
         AVOSCloud.initialize(this, LEANCLOUD_APPID, LEANCLOUD_APPKEY);
+        AVUser.alwaysUseSubUserClass(User.class);
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
-        Log.i(TAG, "uncaughtException");
+        Log.i(TAG, "uncaughtException:" + ex.getMessage());
         ex.printStackTrace();
-        Toast.makeText(this,"异常错误！", Toast.LENGTH_SHORT).show();
     }
 }

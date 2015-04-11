@@ -61,7 +61,8 @@ public class BaseActivity extends ActionBarActivity implements View.OnClickListe
     }
 
     public void startActivity(Class<?> cls, Bundle data) {
-        this.startActivity(cls, null, data);
+        Intent intent = new Intent(this, cls);
+        startActivity(intent);
     }
 
     public void startActivity(Class<?> cls, String action, Bundle data) {

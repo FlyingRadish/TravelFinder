@@ -5,11 +5,16 @@ import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.SignUpCallback;
 
+import org.liangxw.travelfinder.util.logger.Log;
+
+import java.util.Date;
+
 /**
  * Created by houxg on 2015/4/11.
  */
 public class UserWrapper {
 
+    public final static String TAG = UserWrapper.class.getSimpleName();
     public final static int TYPE_VISITOR = 1;
     public final static int TYPE_GUDE = 2;
     AVUser avUser;
@@ -58,9 +63,14 @@ public class UserWrapper {
         AVUser.logInInBackground(userName, password, callback);
     }
 
-    public static void is()
-    {
-        AVUser.
+    public static UserWrapper getCurrentUser() {
+        UserWrapper wrapper = null;
+        AVUser user = AVUser.getCurrentUser();
+        Log.i(TAG, "user:" + user);
+        if (user != null) {
+            wrapper = new UserWrapper(user);
+        }
+        return wrapper;
     }
 
     public String getObjectId() {
@@ -69,15 +79,15 @@ public class UserWrapper {
 
 
     public AVGeoPoint getLocation() {
-        return (AVGeoPoint) avUser.get("location");
+        return avUser.getAVGeoPoint("location");
     }
 
     public void setLocation(AVGeoPoint location) {
         avUser.put("location", location);
     }
 
-    public long getLocationUpdateTime() {
-        return (long) avUser.get("locationUpdateTime");
+    public Date getLocationUpdateTime() {
+        return avUser.getDate("locationUpdateTime");
     }
 
     public void setLocationUpdateTime(long locationUpdateTime) {
@@ -85,7 +95,7 @@ public class UserWrapper {
     }
 
     public boolean isLocationUpdateState() {
-        return (boolean) avUser.get("locationUpdateState");
+        return avUser.getBoolean("locationUpdateState");
     }
 
     public void setLocationUpdateState(boolean locationUpdateState) {
@@ -93,7 +103,9 @@ public class UserWrapper {
     }
 
     public int getType() {
-        return (int) avUser.get("type");
+
+        Log.i(TAG, "get type....user:" + avUser);
+        return avUser.getInt("type");
     }
 
     public void setType(int type) {

@@ -49,7 +49,7 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
     @OnClick(R.id.btn_confirm)
     void onRegister(View v) {
 
-        final String[] tokens = new String[]{
+        String[] tokens = new String[]{
                 editUserName.getText().toString(),
                 editPassword.getText().toString(),
                 editNickName.getText().toString(),
@@ -69,10 +69,11 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
                 if (e == null) {
                     Log.i(TAG, "registing success");
                     toast("成功");
-                    UserWrapper.logInInBackground(tokens[0], tokens[1], quickLogin);
+                    startActivity(MainActivity.class);
+                    finish();
                 } else {
                     e.printStackTrace();
-                    toast("注册失败");
+                    toast("失败");
                 }
             }
         });
@@ -81,9 +82,10 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
     LogInCallback quickLogin = new LogInCallback() {
         @Override
         public void done(AVUser avUser, AVException e) {
-            if (e == null) {
-                startActivity(MainActivity.class);
-            } else {
+            if(e==null){
+
+            }
+            else{
                 toast("快速登入失败，请手动登录");
                 isBack = true;
             }
