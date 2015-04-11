@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 
 import org.liangxw.travelfinder.R;
-import org.liangxw.travelfinder.compounent.ActivityStack;
+import org.liangxw.travelfinder.component.ActivityStack;
 import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.logger.Log;
 

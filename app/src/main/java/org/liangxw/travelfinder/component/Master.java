@@ -1,8 +1,10 @@
-package org.liangxw.travelfinder.compounent;
+package org.liangxw.travelfinder.component;
 
 import android.app.Application;
 import android.widget.Toast;
 
+
+import com.avos.avoscloud.AVOSCloud;
 
 import org.liangxw.travelfinder.util.logger.Log;
 
@@ -13,7 +15,11 @@ import de.greenrobot.event.EventBus;
  */
 public class Master extends Application implements Thread.UncaughtExceptionHandler {
 
+
     private static EventBus eventBus;
+    private final static String TAG = Master.class.getSimpleName();
+    private final static String LEANCLOUD_APPID = "ny2rwjcs4yh2ywer683c8fows809egmjwfi82p1rkmpi1kcd";
+    private final static String LEANCLOUD_APPKEY = "esctbelmuzndb61hkh7ak250mchae8nvfcfug4p2km5urvyl";
 
     public Master()
     {
@@ -31,11 +37,14 @@ public class Master extends Application implements Thread.UncaughtExceptionHandl
     @Override
     public void onCreate() {
         super.onCreate();
+        AVOSCloud.initialize(this, LEANCLOUD_APPID, LEANCLOUD_APPKEY);
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
+        Log.i(TAG, "uncaughtException");
+        ex.printStackTrace();
         Toast.makeText(this,"异常错误！", Toast.LENGTH_SHORT).show();
     }
 }

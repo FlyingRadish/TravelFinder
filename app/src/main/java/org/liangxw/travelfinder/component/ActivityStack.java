@@ -1,4 +1,4 @@
-package org.liangxw.travelfinder.compounent;
+package org.liangxw.travelfinder.component;
 
 import android.app.Activity;
 import android.content.Context;

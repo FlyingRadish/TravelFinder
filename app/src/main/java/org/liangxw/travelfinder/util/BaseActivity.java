@@ -8,7 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.liangxw.travelfinder.R;
-import org.liangxw.travelfinder.compounent.ActivityStack;
+import org.liangxw.travelfinder.component.ActivityStack;
 import org.liangxw.travelfinder.util.logger.Log;
 
 
