@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.component.ActivityStack;
+import org.liangxw.travelfinder.model.Globe;
 import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.logger.Log;
 
@@ -13,11 +14,25 @@ public class GroupQRCodeActivity extends BaseActivity implements ActivityStack.A
 
     private final static String TAG = GroupQRCodeActivity.class.getSimpleName();
 
+    String QRCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_group_qr_code);
         super.onCreate(savedInstanceState);
+
+        QRCode = getIntent().getAction();
+        Log.i(TAG, "QRCode:" + QRCode);
+        if (QRCode == null || !QRCode.contains(Globe.QR_PREFIX) || QRCode.equals(Globe.QR_PREFIX)) {
+            toast("错误的传递参数");
+            Log.i(TAG, "wrong params");
+            return;
+        }
+        genarateQRCode(QRCode);
+    }
+
+    private void genarateQRCode(String qrCode) {
+
     }
 
     @Override
@@ -27,7 +42,7 @@ public class GroupQRCodeActivity extends BaseActivity implements ActivityStack.A
 
     @Override
     public boolean onPop(Activity prev, Activity now) {
-        Log.i(TAG, "onPop, prev:"+ prev.getClass().getSimpleName());
+        Log.i(TAG, "onPop, prev:" + prev.getClass().getSimpleName());
         if (!(prev instanceof GroupMapActivity)) {
             Log.i(TAG, "create");
             startActivity(GroupMapActivity.class);

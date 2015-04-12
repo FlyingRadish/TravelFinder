@@ -5,8 +5,10 @@ import android.widget.Toast;
 
 
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVObject;
 import com.avos.avoscloud.AVUser;
 
+import org.liangxw.travelfinder.model.Group;
 import org.liangxw.travelfinder.model.User;
 import org.liangxw.travelfinder.util.logger.Log;
 
@@ -39,8 +41,9 @@ public class Master extends Application implements Thread.UncaughtExceptionHandl
     @Override
     public void onCreate() {
         super.onCreate();
+        AVObject.registerSubclass(Group.class);
         AVOSCloud.initialize(this, LEANCLOUD_APPID, LEANCLOUD_APPKEY);
-        AVUser.alwaysUseSubUserClass(User.class);
+//        AVUser.alwaysUseSubUserClass(User.class);
         Thread.setDefaultUncaughtExceptionHandler(this);
     }
 

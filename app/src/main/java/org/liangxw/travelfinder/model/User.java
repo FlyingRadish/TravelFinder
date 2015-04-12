@@ -1,5 +1,6 @@
 package org.liangxw.travelfinder.model;
 
+import com.avos.avoscloud.AVClassName;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;

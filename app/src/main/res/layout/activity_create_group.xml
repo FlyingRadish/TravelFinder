@@ -28,7 +28,7 @@
                 android:textSize="@dimen/textsize_20" />
 
             <EditText
-                android:id="@+id/edit_user_name"
+                android:id="@+id/edit_group_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp" />

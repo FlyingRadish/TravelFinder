@@ -34,6 +34,7 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
         setContentView(R.layout.activity_register);
         super.onCreate(savedInstanceState);
         ButterKnife.inject(this);
+        Log.i(TAG, "onCreate");
     }
 
     @InjectView(R.id.edit_user_name)
@@ -56,14 +57,14 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
                 editPhone.getText().toString()
         };
 
-        UserWrapper userWrapper = new UserWrapper();
-        userWrapper.setUsername(tokens[0]);
-        userWrapper.setPassword(tokens[1]);
-        userWrapper.setNickName(tokens[2]);
-        userWrapper.setMobilePhoneNumber(tokens[3]);
-        userWrapper.setType(UserWrapper.TYPE_VISITOR);
+        UserWrapper user = new UserWrapper();
+        user.setUsername(tokens[0]);
+        user.setPassword(tokens[1]);
+        user.setNickName(tokens[2]);
+        user.setMobilePhoneNumber(tokens[3]);
+        user.setType(UserWrapper.TYPE_GUIDE);
         Log.i(TAG, "registing");
-        userWrapper.signUpInBackground(new SignUpCallback() {
+        user.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(AVException e) {
                 if (e == null) {
@@ -97,6 +98,11 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
     protected void onRightButtonClicked() {
         isBack = true;
         super.onRightButtonClicked();
+    }
+
+    @Override
+    protected ActivityStack.ActivityRule getActivityRule() {
+        return this;
     }
 
     @Override

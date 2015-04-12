@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
-import com.avos.avoscloud.AVUser;
-
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.component.ActivityStack;
 import org.liangxw.travelfinder.model.UserWrapper;
@@ -23,6 +21,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
+        TitleTool.setLeftActionText(this, "我");
         super.onCreate(savedInstanceState);
         if (!isLogin()) {
             needLogin = true;
@@ -30,16 +29,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             finish();
             return;
         }
-        TitleTool.setLeftActionText(this, "我");
-//        if (userWrapper.getType() == UserWrapper.TYPE_GUDE) {
-        TitleTool.addAction(this, R.id.btn_create_group, "建", this);
-//        }
+        if (userWrapper.getType() == UserWrapper.TYPE_GUIDE) {
+            TitleTool.addAction(this, R.id.btn_create_group, "建", this);
+        }
     }
 
     private boolean isLogin() {
-//        AVUser avUser = AVUser.getCurrentUser();
         userWrapper = UserWrapper.getCurrentUser();
-        Log.i(TAG, "now user:" + userWrapper);
+        Log.i(TAG, "now user:" + userWrapper.getAvUser());
         if (userWrapper == null) {
             return false;
         } else {
@@ -58,8 +55,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         switch (v.getId()) {
             case R.id.btn_create_group:
                 startActivity(CreateGroupActivity.class);
-//                int type  = userWrapper.getType();
-//                Log.i(TAG, "type:" + type);
                 break;
         }
     }

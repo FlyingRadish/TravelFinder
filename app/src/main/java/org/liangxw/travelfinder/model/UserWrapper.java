@@ -16,7 +16,7 @@ public class UserWrapper {
 
     public final static String TAG = UserWrapper.class.getSimpleName();
     public final static int TYPE_VISITOR = 1;
-    public final static int TYPE_GUDE = 2;
+    public final static int TYPE_GUIDE = 2;
     AVUser avUser;
 
     public UserWrapper() {
@@ -24,7 +24,11 @@ public class UserWrapper {
     }
 
     public UserWrapper(AVUser avUser) {
-        avUser = avUser;
+        this.avUser = avUser;
+    }
+
+    public AVUser getAvUser() {
+        return avUser;
     }
 
     public String getNickName() {

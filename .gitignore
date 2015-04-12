@@ -6,3 +6,4 @@
 /build
 *.apk
 keystore.jks
+app/manifest-merger-release-report.txt
