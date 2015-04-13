@@ -1,6 +1,10 @@
 package org.liangxw.travelfinder.util.logger;
 
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.UnknownHostException;
+
 /**
  * Created by houxg on 2015/1/2.
  */
@@ -13,114 +17,78 @@ public class Log {
     public static final int ERROR = android.util.Log.ERROR;
     public static final int WTF = android.util.Log.ASSERT;
 
-    private static final int LOGTYPE_NONE = 0x00;
-    private static final int LOGTYPE_LOGCAT = 0x01;
-    private static final int LOGTYPE_FILE = 0x02;
-    private static final int LOGTYPE_VIEW = 0x04;
+    private static final int NUMBER_OF_LOGTYPE = 4;
+    private static final int POS_OF_LOGTYPE_VIEW = 2;
 
-    private static int LOG_TYPE = LOGTYPE_LOGCAT | LOGTYPE_FILE | LOGTYPE_VIEW;
+    private static final int LOGTYPE_NONE = 0;
+    private static final int LOGTYPE_LOGCAT = 1;
+    private static final int LOGTYPE_FILE = 1 << 1;
+    private static final int LOGTYPE_VIEW = 1 << 2;
+    private static final int LOGTYPE_NETWORK = 1 << 3;
+
+    //    private static int LOG_TYPE = LOGTYPE_LOGCAT | LOGTYPE_FILE | LOGTYPE_VIEW;
+    private static int LOG_TYPE = LOGTYPE_LOGCAT | LOGTYPE_FILE | LOGTYPE_VIEW | LOGTYPE_NETWORK;
 //    private static int LOG_TYPE = LOGTYPE_NONE;
 
-    private static LogNode fileLogger = new FileLogger();
+    private static LogNode[] logNodes = new LogNode[]{new LogCat(), new FileLogger(), null, new NetLogger()};
 
-    private static LogNode viewLogger;
 
     public static void e(String tag, String content) {
         if (LOG_TYPE == LOGTYPE_NONE) {
             return;
         }
-        if ((LOG_TYPE & LOGTYPE_LOGCAT) > 0) {
-            android.util.Log.e(tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_FILE) > 0) {
-            fileLogger.log(ERROR, tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_VIEW) > 0 && viewLogger != null) {
-            viewLogger.log(ERROR, tag, content);
-        }
+        log(ERROR, tag, content);
     }
 
     public static void i(String tag, String content) {
         if (LOG_TYPE == LOGTYPE_NONE) {
             return;
         }
-        if ((LOG_TYPE & LOGTYPE_LOGCAT) > 0) {
-            android.util.Log.i(tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_FILE) > 0) {
-            fileLogger.log(INFO, tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_VIEW) > 0 && viewLogger != null) {
-            viewLogger.log(INFO, tag, content);
-        }
+        log(INFO, tag, content);
     }
 
     public static void d(String tag, String content) {
         if (LOG_TYPE == LOGTYPE_NONE) {
             return;
         }
-        if ((LOG_TYPE & LOGTYPE_LOGCAT) > 0) {
-            android.util.Log.d(tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_FILE) > 0) {
-            fileLogger.log(DEBUG, tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_VIEW) > 0 && viewLogger != null) {
-            viewLogger.log(DEBUG, tag, content);
-        }
+        log(DEBUG, tag, content);
     }
 
     public static void v(String tag, String content) {
         if (LOG_TYPE == LOGTYPE_NONE) {
             return;
         }
-        if ((LOG_TYPE & LOGTYPE_LOGCAT) > 0) {
-            android.util.Log.v(tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_FILE) > 0) {
-            fileLogger.log(VERBOSE, tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_VIEW) > 0 && viewLogger != null) {
-            viewLogger.log(VERBOSE, tag, content);
-        }
+        log(VERBOSE, tag, content);
     }
 
     public static void w(String tag, String content) {
         if (LOG_TYPE == LOGTYPE_NONE) {
             return;
         }
-        if ((LOG_TYPE & LOGTYPE_LOGCAT) > 0) {
-            android.util.Log.w(tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_FILE) > 0) {
-            fileLogger.log(WARN, tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_VIEW) > 0 && viewLogger != null) {
-            viewLogger.log(WARN, tag, content);
-        }
+        log(WARN, tag, content);
     }
 
     public static void wtf(String tag, String content) {
         if (LOG_TYPE == LOGTYPE_NONE) {
             return;
         }
-        if ((LOG_TYPE & LOGTYPE_LOGCAT) > 0) {
-            android.util.Log.wtf(tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_FILE) > 0) {
-            fileLogger.log(WTF, tag, content);
-        }
-        if ((LOG_TYPE & LOGTYPE_VIEW) > 0 && viewLogger != null) {
-            viewLogger.log(WTF, tag, content);
+        log(WTF, tag, content);
+    }
+
+    private static void log(int priority, String tag, String content) {
+        for (int pos = 0; pos < NUMBER_OF_LOGTYPE; pos++) {
+            if (((1 << pos) & LOG_TYPE) != 0 && logNodes[pos] != null) {
+                logNodes[pos].log(priority, tag, content);
+            }
         }
     }
 
     public static void setViewLogger(LogNode view) {
-        viewLogger = view;
+        logNodes[POS_OF_LOGTYPE_VIEW] = view;
     }
 
     public static String getPriorityStr(int priority) {
-        String priorityStr = "";
+        String priorityStr;
         switch (priority) {
             case Log.VERBOSE:
                 priorityStr = "V";
@@ -141,8 +109,31 @@ public class Log {
                 priorityStr = "WTF";
                 break;
             default:
+                priorityStr = "UNKNOWN";
                 break;
         }
         return priorityStr;
+    }
+
+    public static String getStackTraceString(Throwable tr) {
+        if (tr == null) {
+            return "";
+        }
+
+        // This is to reduce the amount of log spew that apps do in the non-error
+        // condition of the network being unavailable.
+        Throwable t = tr;
+        while (t != null) {
+            if (t instanceof UnknownHostException) {
+                return "";
+            }
+            t = t.getCause();
+        }
+
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        tr.printStackTrace(pw);
+        pw.flush();
+        return sw.toString();
     }
 }

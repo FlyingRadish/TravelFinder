@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.avos.avoscloud.AVUser;
+
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.component.ActivityStack;
 import org.liangxw.travelfinder.model.UserWrapper;
@@ -36,7 +38,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private boolean isLogin() {
         userWrapper = UserWrapper.getCurrentUser();
-        Log.i(TAG, "now user:" + userWrapper.getAvUser());
+        Log.e(TAG, "now user:" + userWrapper.getAvUser());
         if (userWrapper == null) {
             return false;
         } else {
@@ -54,7 +56,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_create_group:
-                startActivity(CreateGroupActivity.class);
+                String a=null;
+                a.toString();
+//                startActivity(CreateGroupActivity.class);
                 break;
         }
     }

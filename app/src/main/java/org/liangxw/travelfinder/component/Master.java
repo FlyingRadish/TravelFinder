@@ -1,15 +1,11 @@
 package org.liangxw.travelfinder.component;
 
 import android.app.Application;
-import android.widget.Toast;
-
 
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
 
 import org.liangxw.travelfinder.model.Group;
-import org.liangxw.travelfinder.model.User;
 import org.liangxw.travelfinder.util.logger.Log;
 
 import de.greenrobot.event.EventBus;
@@ -25,8 +21,7 @@ public class Master extends Application implements Thread.UncaughtExceptionHandl
     private final static String LEANCLOUD_APPID = "ny2rwjcs4yh2ywer683c8fows809egmjwfi82p1rkmpi1kcd";
     private final static String LEANCLOUD_APPKEY = "esctbelmuzndb61hkh7ak250mchae8nvfcfug4p2km5urvyl";
 
-    public Master()
-    {
+    public Master() {
         eventBus = new EventBus();
     }
 
@@ -51,5 +46,6 @@ public class Master extends Application implements Thread.UncaughtExceptionHandl
     public void uncaughtException(Thread thread, Throwable ex) {
         Log.i(TAG, "uncaughtException:" + ex.getMessage());
         ex.printStackTrace();
+        Log.wtf(getPackageName(), Log.getStackTraceString(ex));
     }
 }
