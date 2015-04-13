@@ -6,5 +6,6 @@
     <string name="group_qr_code">群二维码</string>
     <string name="group_map">群地图</string>
     <string name="register">注册</string>
+    <string name="add_group">加入群</string>
 
 </resources>

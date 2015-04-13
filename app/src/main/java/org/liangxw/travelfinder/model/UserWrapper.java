@@ -74,6 +74,7 @@ public class UserWrapper {
         if (user != null) {
             wrapper = new UserWrapper(user);
         }
+        Log.i(TAG, "userWrapper:" + wrapper);
         return wrapper;
     }
 
@@ -122,5 +123,10 @@ public class UserWrapper {
 
     public void setAvatarUrl(String avatarUrl) {
         avUser.put("avatarUrl", avatarUrl);
+    }
+
+    @Override
+    public String toString() {
+            return avUser.toString();
     }
 }

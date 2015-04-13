@@ -16,7 +16,7 @@ import org.liangxw.travelfinder.util.logger.Log;
  * Activity基础类
  * Created by houxg on 2014/12/14.
  */
-public class BaseActivity extends ActionBarActivity implements View.OnClickListener {
+public class BaseActivity extends ActionBarActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +24,12 @@ public class BaseActivity extends ActionBarActivity implements View.OnClickListe
         setTitle(getTitle());
         View view = findViewById(R.id.btn_back);
         if (view != null) {
-            view.setOnClickListener(this);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onRightButtonClicked();
+                }
+            });
         }
         ActivityStack.getInstance(this).add(this);
     }
@@ -82,11 +87,6 @@ public class BaseActivity extends ActionBarActivity implements View.OnClickListe
 
     public void toast(int resId) {
         Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onClick(View v) {
-        onRightButtonClicked();
     }
 
     protected void onRightButtonClicked() {

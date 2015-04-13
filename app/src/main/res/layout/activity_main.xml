@@ -6,10 +6,33 @@
         android:id="@+id/activity_title"
         layout="@layout/base_activity_title" />
 
+    <RelativeLayout
+        android:id="@+id/panel_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_title"
+        android:padding="8dp"
+        android:elevation="2dp">
+
+        <Switch
+            android:id="@+id/switch_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/switch_update"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:text="报告我的位置" />
+    </RelativeLayout>
+
     <TextView
         android:text="你还没有团哟"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

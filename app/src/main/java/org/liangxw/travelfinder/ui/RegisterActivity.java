@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVUser;
@@ -45,6 +46,8 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
     EditText editNickName;
     @InjectView(R.id.edit_phone)
     EditText editPhone;
+    @InjectView(R.id.radio_group)
+    RadioGroup radioGroup;
 
 
     @OnClick(R.id.btn_confirm)
@@ -62,7 +65,7 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
         user.setPassword(tokens[1]);
         user.setNickName(tokens[2]);
         user.setMobilePhoneNumber(tokens[3]);
-        user.setType(UserWrapper.TYPE_GUIDE);
+        user.setType(getType());
         Log.i(TAG, "registing");
         user.signUpInBackground(new SignUpCallback() {
             @Override
@@ -80,13 +83,28 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
         });
     }
 
+    int getType() {
+        int type;
+        switch (radioGroup.getCheckedRadioButtonId()) {
+            case R.id.radio_guide:
+                type = UserWrapper.TYPE_GUIDE;
+                break;
+            case R.id.radio_visitor:
+                type = UserWrapper.TYPE_VISITOR;
+                break;
+            default:
+                type = UserWrapper.TYPE_VISITOR;
+                break;
+        }
+        return type;
+    }
+
     LogInCallback quickLogin = new LogInCallback() {
         @Override
         public void done(AVUser avUser, AVException e) {
-            if(e==null){
+            if (e == null) {
 
-            }
-            else{
+            } else {
                 toast("快速登入失败，请手动登录");
                 isBack = true;
             }

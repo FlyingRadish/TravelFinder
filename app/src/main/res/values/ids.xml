@@ -2,4 +2,5 @@
 <resources>
     <item name="btn_create_group" type="id"/>
     <item name="btn_group_qr_code" type="id"/>
+    <item name="btn_add_group" type="id"/>
 </resources>

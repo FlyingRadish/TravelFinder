@@ -89,6 +89,28 @@
             android:text="手机"
             android:textSize="18sp" />
 
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_below="@id/edit_phone"
+            android:layout_centerHorizontal="true">
+
+            <RadioButton
+                android:id="@+id/radio_visitor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="我是游客" />
+
+            <RadioButton
+                android:id="@+id/radio_guide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我是导游" />
+        </RadioGroup>
+
 
         <Button
             android:id="@+id/btn_confirm"
