@@ -70,7 +70,6 @@ public class UserWrapper {
     public static UserWrapper getCurrentUser() {
         UserWrapper wrapper = null;
         AVUser user = AVUser.getCurrentUser();
-        Log.i(TAG, "user:" + user);
         if (user != null) {
             wrapper = new UserWrapper(user);
         }

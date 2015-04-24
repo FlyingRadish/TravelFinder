@@ -7,5 +7,6 @@
     <string name="group_map">群地图</string>
     <string name="register">注册</string>
     <string name="add_group">加入群</string>
+    <string name="group_info">群信息</string>
 
 </resources>

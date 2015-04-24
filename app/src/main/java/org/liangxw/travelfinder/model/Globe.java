@@ -6,4 +6,7 @@ package org.liangxw.travelfinder.model;
 public class Globe {
 
     public final static String QR_PREFIX = "group://";
+
+    public final static String GROUP_NAME = "group_name";
+    public final static String GROUP_ID = "group_id";
 }

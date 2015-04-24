@@ -7,6 +7,8 @@ import android.view.View;
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.component.ActivityStack;
 import org.liangxw.travelfinder.model.UserWrapper;
+import org.liangxw.travelfinder.ui.guide.CreateGroupActivity;
+import org.liangxw.travelfinder.ui.visitor.AddGroupActivity;
 import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.TitleTool;
 import org.liangxw.travelfinder.util.logger.Log;
@@ -21,7 +23,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_main);
-        TitleTool.setLeftActionText(this, "我");
+        setLeftActionText( "我");
         super.onCreate(savedInstanceState);
         Log.i(TAG, "start");
         if (!isLogin()) {
@@ -31,9 +33,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             return;
         }
         if (userWrapper.getType() == UserWrapper.TYPE_GUIDE) {
-            TitleTool.addAction(this, R.id.btn_create_group, "建", this);
+            addAction( R.id.btn_create_group, "建", this);
         } else if (userWrapper.getType() == UserWrapper.TYPE_VISITOR) {
-            TitleTool.addAction(this, R.id.btn_add_group, "加", this);
+            addAction( R.id.btn_add_group, "加", this);
         }
     }
 
@@ -45,12 +47,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         } else {
             return true;
         }
-    }
-
-
-    @Override
-    protected void onRightButtonClicked() {
-        toast("还没有搞好哟");
     }
 
     @Override

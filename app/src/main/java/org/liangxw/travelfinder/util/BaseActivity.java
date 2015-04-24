@@ -1,9 +1,14 @@
 package org.liangxw.travelfinder.util;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,5 +97,31 @@ public class BaseActivity extends ActionBarActivity{
     protected void onRightButtonClicked() {
         Log.i(this.getClass().getSimpleName(), "onClicked back");
         finish();
+    }
+
+    public void addAction(int id, String text, View.OnClickListener listener) {
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.panel_title_right);
+        Button button = new Button(this, null);
+        button.setId(id);
+        button.setText(text);
+        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.title_action_text_size));
+        button.setOnClickListener(listener);
+        button.setBackgroundColor(getResources().getColor(R.color.theme));
+        button.setTextColor(getResources().getColor(R.color.white));
+        linearLayout.addView(button, new LinearLayout.LayoutParams(UITool.dp2px(this, 50), ViewGroup.LayoutParams.MATCH_PARENT));
+    }
+
+    public void setLeftActionVisibility(boolean isHide) {
+        if (isHide) {
+            findViewById(R.id.btn_back).setVisibility(View.INVISIBLE);
+        } else {
+            findViewById(R.id.btn_back).setVisibility(View.VISIBLE);
+        }
+    }
+
+
+    public void setLeftActionText(String text) {
+        Button button = (Button) findViewById(R.id.btn_back);
+        button.setText(text);
     }
 }

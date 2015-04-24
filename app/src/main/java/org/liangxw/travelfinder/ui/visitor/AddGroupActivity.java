@@ -1,5 +1,6 @@
-package org.liangxw.travelfinder.ui;
+package org.liangxw.travelfinder.ui.visitor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ public class AddGroupActivity extends BaseActivity {
         ButterKnife.inject(this);
     }
 
+
     @InjectView(R.id.edit_group_id)
     EditText editGroupId;
 
@@ -39,6 +41,7 @@ public class AddGroupActivity extends BaseActivity {
         if (groupUrl.contains(Globe.QR_PREFIX) && groupUrl.length() > Globe.QR_PREFIX.length()) {
             String groupId = groupUrl.replace(Globe.QR_PREFIX, "");
             Log.i(TAG, "groupId:" + groupId);
+
             AVQuery<Group> groupAVQuery = new AVQuery<>(Group.CLASS_NAME);
             groupAVQuery.getInBackground(groupId, new GetCallback<Group>() {
                 @Override
@@ -54,10 +57,16 @@ public class AddGroupActivity extends BaseActivity {
                     }
                 }
             });
+
+
         }
     }
 
     private void askToAddGroup(Group group) {
         Log.i(TAG, "found group:" + group);
+        Intent intent = new Intent(this, FindGroupResultActivity.class);
+        intent.setAction(group.getObjectId());
+        startActivity(intent);
+        finish();
     }
 }

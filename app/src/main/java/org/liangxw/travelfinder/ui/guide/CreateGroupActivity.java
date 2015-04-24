@@ -1,4 +1,4 @@
-package org.liangxw.travelfinder.ui;
+package org.liangxw.travelfinder.ui.guide;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import com.avos.avoscloud.SaveCallback;
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.model.Globe;
 import org.liangxw.travelfinder.model.Group;
+import org.liangxw.travelfinder.ui.GroupQRCodeActivity;
 import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.ToastTool;
 import org.liangxw.travelfinder.util.logger.Log;

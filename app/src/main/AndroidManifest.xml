@@ -35,12 +35,16 @@
             android:label="@string/register"></activity>
 
         <activity
-            android:name=".ui.CreateGroupActivity"
+            android:name=".ui.guide.CreateGroupActivity"
             android:label="@string/create_group"></activity>
 
         <activity
-            android:name=".ui.AddGroupActivity"
+            android:name=".ui.visitor.AddGroupActivity"
             android:label="@string/add_group"></activity>
+
+        <activity
+            android:name=".ui.visitor.FindGroupResultActivity"
+            android:label="@string/group_info"></activity>
 
         <activity
             android:name=".ui.GroupMapActivity"
