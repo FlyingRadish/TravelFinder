@@ -91,6 +91,7 @@
     <orderEntry type="library" exported="" name="httpcore-4.2.4" level="project" />
     <orderEntry type="library" exported="" name="avoscloud-feedback-v2.7" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="Android_2DMapApi_V2.4.1" level="project" />
     <orderEntry type="library" exported="" name="avoscloud-push-v2.7" level="project" />
     <orderEntry type="library" exported="" name="butterknife-6.0.0" level="project" />
     <orderEntry type="library" exported="" name="fastjson-1.1.37-leancloud" level="project" />
@@ -99,6 +100,7 @@
     <orderEntry type="library" exported="" name="avoscloud-statistics-v2.7" level="project" />
     <orderEntry type="library" exported="" name="avoscloud-sdk-v2.7" level="project" />
     <orderEntry type="library" exported="" name="Java-WebSocket-1.2.0-leancloud" level="project" />
+    <orderEntry type="library" exported="" name="Android_Location_V1.3.2" level="project" />
   </component>
 </module>
 

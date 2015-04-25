@@ -21,6 +21,7 @@
             android:layout_alignParentRight="true" />
 
         <TextView
+            android:id="@+id/text_report_my_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/switch_update"
@@ -29,10 +30,20 @@
             android:text="报告我的位置" />
     </RelativeLayout>
 
+    <ListView
+        android:id="@+id/list_group"
+        android:layout_below="@id/panel_switch"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:elevation="0dp"/>
+
     <TextView
+        android:id="@+id/text_no_group"
         android:text="你还没有团哟"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_centerInParent="true"
+        android:elevation="0dp"/>
 
 </RelativeLayout>

@@ -1,8 +1,10 @@
 package org.liangxw.travelfinder.model;
 
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.SignUpCallback;
 
 import org.liangxw.travelfinder.util.logger.Log;
@@ -19,6 +21,12 @@ public class UserWrapper {
     public final static int TYPE_GUIDE = 2;
     AVUser avUser;
 
+    public final static String NICK_NAME = "nickName";
+    public final static String TYPE = "type";
+    public final static String LOCATION_UPDATE_STATE = "locationUpdateState";
+    public final static String LOCATION = "location";
+    public final static String LOCATION_UPDATE_TIME = "locationUpdateTime";
+
     public UserWrapper() {
         avUser = new AVUser();
     }
@@ -32,11 +40,11 @@ public class UserWrapper {
     }
 
     public String getNickName() {
-        return (String) avUser.get("nickName");
+        return (String) avUser.get(NICK_NAME);
     }
 
     public void setNickName(String nickName) {
-        avUser.put("nickName", nickName);
+        avUser.put(NICK_NAME, nickName);
     }
 
     public String getUsername() {
@@ -57,6 +65,61 @@ public class UserWrapper {
 
     public void setMobilePhoneNumber(String mobilePhoneNumber) {
         avUser.setMobilePhoneNumber(mobilePhoneNumber);
+    }
+
+    public void setLocationUpdateTime(long timeInMill) {
+        Date date = new Date(timeInMill);
+        avUser.put(LOCATION_UPDATE_TIME, date);
+    }
+
+    public long getLastLocationUpdateTime(){
+        Date date = avUser.getDate(LOCATION_UPDATE_TIME);
+        return date.getTime();
+    }
+
+    public AVGeoPoint getLocation() {
+        return avUser.getAVGeoPoint(LOCATION);
+    }
+
+    public void setLocation(AVGeoPoint location) {
+        avUser.put(LOCATION, location);
+    }
+
+    public boolean isLocationUpdating() {
+        return avUser.getBoolean(LOCATION_UPDATE_STATE);
+    }
+
+    public void setLocationUpdateState(boolean locationUpdateState) {
+        avUser.put(LOCATION_UPDATE_STATE, locationUpdateState);
+    }
+
+    public int getType() {
+        return avUser.getInt(TYPE);
+    }
+
+    public void setType(int type) {
+        avUser.put(TYPE, type);
+    }
+
+    public String getAvatarUrl() {
+        return (String) avUser.get("avatarUrl");
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        avUser.put("avatarUrl", avatarUrl);
+    }
+
+
+    public void save() throws AVException {
+        avUser.save();
+    }
+
+    public void saveInBackground() {
+        avUser.saveInBackground();
+    }
+
+    public void saveInBackground(SaveCallback callback) {
+        avUser.saveInBackground(callback);
     }
 
     public void signUpInBackground(SignUpCallback callback) {
@@ -80,52 +143,8 @@ public class UserWrapper {
     public String getObjectId() {
         return avUser.getObjectId();
     }
-
-
-    public AVGeoPoint getLocation() {
-        return avUser.getAVGeoPoint("location");
-    }
-
-    public void setLocation(AVGeoPoint location) {
-        avUser.put("location", location);
-    }
-
-    public Date getLocationUpdateTime() {
-        return avUser.getDate("locationUpdateTime");
-    }
-
-    public void setLocationUpdateTime(long locationUpdateTime) {
-        avUser.put("locationUpdateTime", locationUpdateTime);
-    }
-
-    public boolean isLocationUpdateState() {
-        return avUser.getBoolean("locationUpdateState");
-    }
-
-    public void setLocationUpdateState(boolean locationUpdateState) {
-        avUser.put("locationUpdateState", locationUpdateState);
-    }
-
-    public int getType() {
-
-        Log.i(TAG, "get type....user:" + avUser);
-        return avUser.getInt("type");
-    }
-
-    public void setType(int type) {
-        avUser.put("type", type);
-    }
-
-    public String getAvatarUrl() {
-        return (String) avUser.get("avatarUrl");
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        avUser.put("avatarUrl", avatarUrl);
-    }
-
     @Override
     public String toString() {
-            return avUser.toString();
+        return avUser.toString();
     }
 }

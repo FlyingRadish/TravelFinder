@@ -4,6 +4,7 @@ package org.liangxw.travelfinder.util.logger;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
+import java.util.List;
 
 /**
  * Created by houxg on 2015/1/2.
@@ -113,6 +114,12 @@ public class Log {
                 break;
         }
         return priorityStr;
+    }
+
+    public static void printList(String tag, List<? extends Object> list) {
+        for (Object val : list) {
+            Log.i(tag, val.toString());
+        }
     }
 
     public static String getStackTraceString(Throwable tr) {

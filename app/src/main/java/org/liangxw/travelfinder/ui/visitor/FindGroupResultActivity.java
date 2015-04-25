@@ -136,10 +136,7 @@ public class FindGroupResultActivity extends BaseActivity {
             @Override
             public void done(AVException e) {
                 if (e == null) {
-                    Intent intent = new Intent(FindGroupResultActivity.this, GroupMapActivity.class);
-                    intent.putExtra(Globe.GROUP_NAME, foundedGroup.getName());
-                    intent.putExtra(Globe.GROUP_ID, foundedGroup.getObjectId());
-                    startActivity(intent);
+                    GroupMapActivity.startActivity(FindGroupResultActivity.this, foundedGroup.getObjectId(), foundedGroup.getName());
                     finish();
                 } else {
                     e.printStackTrace();

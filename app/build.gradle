@@ -1,18 +1,24 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'liangxw'
+            keyPassword 'liangxw1234'
+            storeFile file('/keystore.jks')
+            storePassword 'liangxw1234'
+        }
+    }
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
-
 //为了解决部分第三方库重复打包了META-INF的问题
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
     lintOptions {
         abortOnError false
     }
-
     defaultConfig {
         applicationId "org.liangxw.travelfinder"
         minSdkVersion 14
@@ -24,16 +30,19 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.jakewharton:butterknife:6.0.0'
-
     //leancloud
     //avoscloud-sdk 为 LeanCloud基础包
     compile 'cn.leancloud.android:avoscloud-sdk:v2.7+'
@@ -44,4 +53,6 @@ dependencies {
     compile 'cn.leancloud.android:avoscloud-statistics:v2.7+@aar'
     //avoscloud-feedback 为 LeanCloud 用户反馈包
     compile 'cn.leancloud.android:avoscloud-feedback:v2.7+@aar'
+    compile files('libs/Android_2DMapApi_V2.4.1.jar')
+    compile files('libs/Android_Location_V1.3.2.jar')
 }

@@ -10,11 +10,12 @@ import com.avos.avoscloud.AVObject;
 public class Group extends AVObject {
 
     public final static String CLASS_NAME = "Group";
+    public final static String OBJECT_ID = "objectId";
     public final static String NAME = "name";
     public final static String CREATOR_ID = "creatorId";
 
     public Group() {
-        super(CLASS_NAME);
+
     }
 
     public void setName(String name) {
