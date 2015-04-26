@@ -2,43 +2,43 @@ package org.liangxw.travelfinder.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.location.Location;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationListener;
-import com.amap.api.location.LocationManagerProxy;
-import com.amap.api.location.LocationProviderProxy;
 import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.DeleteCallback;
 import com.avos.avoscloud.FindCallback;
 
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.component.ActivityStack;
+import org.liangxw.travelfinder.model.Globe;
 import org.liangxw.travelfinder.model.Group;
-import org.liangxw.travelfinder.model.UGMap;
 import org.liangxw.travelfinder.model.UserWrapper;
+import org.liangxw.travelfinder.service.LocationUpdateService;
 import org.liangxw.travelfinder.ui.guide.CreateGroupActivity;
-import org.liangxw.travelfinder.ui.visitor.AddGroupActivity;
 import org.liangxw.travelfinder.util.BaseActivity;
+import org.liangxw.travelfinder.util.SharedPreferencesTool;
 import org.liangxw.travelfinder.util.adapter.ListAdapter;
+import org.liangxw.travelfinder.util.dialog.BaseDialog;
+import org.liangxw.travelfinder.util.dialog.MessageDialog;
 import org.liangxw.travelfinder.util.logger.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import butterknife.OnCheckedChanged;
 
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, ActivityStack.ActivityRule, AMapLocationListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, ActivityStack.ActivityRule {
 
     private final static String TAG = MainActivity.class.getSimpleName();
     boolean needLogin = false;
@@ -51,10 +51,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @InjectView(R.id.text_no_group)
     TextView textNoGroup;
-    @InjectView(R.id.text_report_my_location)
-    TextView textReport;
+    @InjectView(R.id.switch_update)
+    Switch switchUpdate;
 
-    LocationManagerProxy locationManagerProxy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,52 +69,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
         if (userWrapper.getType() == UserWrapper.TYPE_GUIDE) {
             addAction(R.id.btn_create_group, "建", this);
+            addAction(R.id.btn_add_group, "加", this);
         } else if (userWrapper.getType() == UserWrapper.TYPE_VISITOR) {
             addAction(R.id.btn_add_group, "加", this);
         }
 
         ButterKnife.inject(this);
+
+        init();
+    }
+
+    void init() {
+        boolean isUpdate = SharedPreferencesTool.read(this, Globe.CONFIG_NAME, Globe.ENABLE_UPDATE_LOCATION, false);
+        switchUpdate.setChecked(isUpdate);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        updateGroupInfo();
+        updateGroup();
     }
 
-    private void updateGroupInfo() {
-        AVQuery<UGMap> avQuery = new AVQuery<>(UGMap.CLASS_NAME);
-        avQuery.whereEqualTo(UGMap.USER_ID, userWrapper.getObjectId());
-        avQuery.findInBackground(new FindCallback<UGMap>() {
-            @Override
-            public void done(List<UGMap> ugMaps, AVException e) {
-                if (e == null) {
-                    if (ugMaps.size() == 0) {
-                        Log.i(TAG, "no user-group map found");
-                        handler.obtainMessage(NO_GROUP).sendToTarget();
-                    } else {
-                        Log.i(TAG, "found some user-group map, size:" + ugMaps.size());
-                        Log.printList(TAG, ugMaps);
-                        getAllGroups(ugMaps);
-                    }
-                } else {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    private void getAllGroups(List<UGMap> ugMaps) {
-
-        final List<String> groupIds = new ArrayList<>(ugMaps.size());
-
-        for (UGMap ugMap : ugMaps) {
-            groupIds.add(ugMap.getGroupId());
-        }
-
-        AVQuery<Group> query = new AVQuery<>(Group.CLASS_NAME);
-        query.whereContainedIn(Group.OBJECT_ID, groupIds);
-        query.findInBackground(new FindCallback<Group>() {
+    private void updateGroup() {
+        AVQuery<Group> avQuery = new AVQuery<>(Group.CLASS_NAME);
+        avQuery.whereEqualTo(Group.MEMBERS, userWrapper.getObjectId());
+        avQuery.findInBackground(new FindCallback<Group>() {
             @Override
             public void done(List<Group> groups, AVException e) {
                 if (e == null) {
@@ -136,7 +114,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         });
     }
 
-
     final static int NO_GROUP = 1;
     final static int UPDATE_GROUP = 2;
 
@@ -150,64 +127,79 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     textNoGroup.setVisibility(View.VISIBLE);
                     break;
                 case UPDATE_GROUP:
-                    listGroup.setVisibility(View.VISIBLE);
-                    textNoGroup.setVisibility(View.INVISIBLE);
-                    adapter = new GroupAdapter(MainActivity.this, (List<Group>) msg.obj);
-                    listGroup.setAdapter(adapter);
-                    listGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Group group = (Group) parent.getItemAtPosition(position);
-                            GroupMapActivity.startActivity(MainActivity.this, group.getObjectId(), group.getName());
-                        }
-                    });
+                    updateGroupListView((List<Group>) msg.obj);
                     break;
             }
         }
     };
 
-    @Override
-    public void onLocationChanged(AMapLocation aMapLocation) {
-        if (aMapLocation != null && aMapLocation.getAMapException().getErrorCode() == 0) {
-            //获取位置信息
-            Double geoLat = aMapLocation.getLatitude(); //维度
-            Double geoLng = aMapLocation.getLongitude();    //经度
+    private void updateGroupListView(List<Group> groups) {
+        listGroup.setVisibility(View.VISIBLE);
+        textNoGroup.setVisibility(View.INVISIBLE);
 
-            AVGeoPoint geoPoint = new AVGeoPoint(geoLat, geoLng);
-            userWrapper.setLocation(geoPoint);
-            userWrapper.setLocationUpdateState(true);
-            userWrapper.setLocationUpdateTime(System.currentTimeMillis());
-            userWrapper.saveInBackground();
+        adapter = new GroupAdapter(this, groups);
+        listGroup.setAdapter(adapter);
+        listGroup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Group group = (Group) parent.getItemAtPosition(position);
+                Log.i(TAG, "go to GroupMap");
+                GroupMapActivity.startActivity(MainActivity.this, group.getObjectId(), group.getName());
+            }
+        });
+        setLongClickToDeleteGroupIfIsGuide();
+    }
 
-
-            StringBuilder builder = new StringBuilder();
-            builder.append(aMapLocation.getProvider()).append(", ");
-            builder.append("Lat:").append(geoLat).append(", ");
-            builder.append("Lng:").append(geoLng);
-
-            textReport.setText(builder.toString());
-            Log.i(TAG, builder.toString());
+    private void setLongClickToDeleteGroupIfIsGuide() {
+        if (userWrapper.getType() == UserWrapper.TYPE_GUIDE) {
+            listGroup.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    return showDeleteGroupDialog((Group) parent.getItemAtPosition(position));
+                }
+            });
         }
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-
+    private boolean showDeleteGroupDialog(final Group groupToDelete) {
+        if (groupToDelete.getCreatorId() == null || userWrapper.getObjectId() == null) {
+            Log.w(TAG, "delete wrong, group:" + groupToDelete + ", user:" + userWrapper);
+            return false;
+        }
+        if (groupToDelete.getCreatorId().equals(userWrapper.getObjectId())) {
+            new MessageDialog.Builder(this)
+                    .setTitle("提示")
+                    .setMessage("确认解散这个团 " + groupToDelete.getName() + " ？")
+                    .setPositiveButton("是的", new BaseDialog.OnButtonClickListener() {
+                        @Override
+                        public void onClick(BaseDialog dialog, int witch) {
+                            deleteGroup(groupToDelete);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("不是", new BaseDialog.OnButtonClickListener() {
+                        @Override
+                        public void onClick(BaseDialog dialog, int witch) {
+                            dialog.dismiss();
+                        }
+                    }).create().show();
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
+    private void deleteGroup(Group groupToDelete) {
+        groupToDelete.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    updateGroup();
+                } else {
+                    toast("解散失败");
+                }
+            }
+        });
     }
 
     static class GroupAdapter extends ListAdapter<Group> {
@@ -221,6 +213,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             holder.getTextView(R.id.text_group_name).setText(item.getName());
             holder.getTextView(R.id.text_group_name).setTag(item);
         }
+    }
+
+
+    @OnCheckedChanged(R.id.switch_update)
+    void onCheckedChanged(Switch v, boolean state) {
+        switch (v.getId()) {
+            case R.id.switch_update:
+                setUpdateState(state);
+                break;
+        }
+    }
+
+    private void setUpdateState(boolean state) {
+        Intent intent = new Intent(this, LocationUpdateService.class);
+        if (state) {
+            SharedPreferencesTool.write(this, Globe.CONFIG_NAME, Globe.ENABLE_UPDATE_LOCATION, true);
+            intent.setAction(LocationUpdateService.ACTION_RUN);
+        } else {
+            SharedPreferencesTool.write(this, Globe.CONFIG_NAME, Globe.ENABLE_UPDATE_LOCATION, false);
+            intent.setAction(LocationUpdateService.ACTION_STOP);
+        }
+        startService(intent);
     }
 
 
@@ -255,11 +269,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onRightButtonClicked() {
-        toast("haha");
-        if (locationManagerProxy == null) {
-            locationManagerProxy = LocationManagerProxy.getInstance(this);
-        }
-        locationManagerProxy.requestLocationData(LocationProviderProxy.AMapNetwork, 2 * 1000, 20, this);
+        startActivity(MineActivity.class);
+
     }
 
     @Override

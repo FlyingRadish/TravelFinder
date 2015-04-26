@@ -1,4 +1,4 @@
-package org.liangxw.travelfinder.ui.visitor;
+package org.liangxw.travelfinder.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import com.avos.avoscloud.GetCallback;
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.model.Globe;
 import org.liangxw.travelfinder.model.Group;
+import org.liangxw.travelfinder.ui.visitor.FindGroupResultActivity;
 import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.logger.Log;
 

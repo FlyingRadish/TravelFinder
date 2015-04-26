@@ -9,7 +9,9 @@ import com.avos.avoscloud.SignUpCallback;
 
 import org.liangxw.travelfinder.util.logger.Log;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by houxg on 2015/4/11.
@@ -21,14 +23,30 @@ public class UserWrapper {
     public final static int TYPE_GUIDE = 2;
     AVUser avUser;
 
+
+    public final static String CLASS_NAME = "_User";
+    public final static String OBJECT_ID = "objectId";
     public final static String NICK_NAME = "nickName";
     public final static String TYPE = "type";
     public final static String LOCATION_UPDATE_STATE = "locationUpdateState";
     public final static String LOCATION = "location";
+    public final static String ACCURACY = "accuracy";
     public final static String LOCATION_UPDATE_TIME = "locationUpdateTime";
 
     public UserWrapper() {
         avUser = new AVUser();
+    }
+
+    public static List<UserWrapper> getList(List<AVUser> list) {
+        List<UserWrapper> wrapperList;
+        if (list == null) {
+            return new ArrayList<>();
+        }
+        wrapperList = new ArrayList<>(list.size());
+        for (AVUser user : list) {
+            wrapperList.add(new UserWrapper(user));
+        }
+        return wrapperList;
     }
 
     public UserWrapper(AVUser avUser) {
@@ -72,7 +90,7 @@ public class UserWrapper {
         avUser.put(LOCATION_UPDATE_TIME, date);
     }
 
-    public long getLastLocationUpdateTime(){
+    public long getLastLocationUpdateTime() {
         Date date = avUser.getDate(LOCATION_UPDATE_TIME);
         return date.getTime();
     }
@@ -91,6 +109,14 @@ public class UserWrapper {
 
     public void setLocationUpdateState(boolean locationUpdateState) {
         avUser.put(LOCATION_UPDATE_STATE, locationUpdateState);
+    }
+
+    public float getAccuracy() {
+        return Float.parseFloat((String)avUser.get(ACCURACY));
+    }
+
+    public void setAccuracy(float accuracy) {
+        avUser.put(ACCURACY, String.valueOf(accuracy));
     }
 
     public int getType() {
@@ -143,6 +169,11 @@ public class UserWrapper {
     public String getObjectId() {
         return avUser.getObjectId();
     }
+
+    public void logOut(){
+        avUser.logOut();
+    }
+
     @Override
     public String toString() {
         return avUser.toString();

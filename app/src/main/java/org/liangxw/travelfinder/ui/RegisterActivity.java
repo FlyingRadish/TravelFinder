@@ -7,6 +7,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
 import com.avos.avoscloud.SignUpCallback;
@@ -65,6 +66,10 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
         user.setPassword(tokens[1]);
         user.setNickName(tokens[2]);
         user.setMobilePhoneNumber(tokens[3]);
+        //位置状态默认值：不上传/时间戳为0/维度经度均为0
+        user.setLocationUpdateState(false);
+        user.setLocationUpdateTime(0);
+        user.setLocation(new AVGeoPoint(0, 0));
         user.setType(getType());
         Log.i(TAG, "registing");
         user.signUpInBackground(new SignUpCallback() {

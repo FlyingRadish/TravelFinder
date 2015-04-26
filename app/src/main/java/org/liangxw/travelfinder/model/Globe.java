@@ -9,4 +9,8 @@ public class Globe {
 
     public final static String GROUP_NAME = "group_name";
     public final static String GROUP_ID = "group_id";
+
+
+    public final static String CONFIG_NAME = "config";
+    public final static String ENABLE_UPDATE_LOCATION = "enable_update_location";
 }

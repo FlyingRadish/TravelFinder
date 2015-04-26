@@ -11,6 +11,7 @@ import com.avos.avoscloud.SaveCallback;
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.model.Globe;
 import org.liangxw.travelfinder.model.Group;
+import org.liangxw.travelfinder.model.UserWrapper;
 import org.liangxw.travelfinder.ui.GroupQRCodeActivity;
 import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.ToastTool;
@@ -44,8 +45,11 @@ public class CreateGroupActivity extends BaseActivity {
 
 
     void createGroup(String name) {
+        UserWrapper userWrapper = UserWrapper.getCurrentUser();
         final Group group = new Group();
         group.setName(name);
+        group.setCreatorId(userWrapper.getObjectId());
+        group.addMember(userWrapper.getObjectId());
         group.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {

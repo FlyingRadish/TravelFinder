@@ -5,7 +5,6 @@ import android.os.Bundle;
 
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.component.ActivityStack;
-import org.liangxw.travelfinder.model.Globe;
 import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.logger.Log;
 
@@ -23,7 +22,7 @@ public class GroupQRCodeActivity extends BaseActivity implements ActivityStack.A
 
         QRCode = getIntent().getAction();
         Log.i(TAG, "QRCode:" + QRCode);
-        if (QRCode == null || !QRCode.contains(Globe.QR_PREFIX) || QRCode.equals(Globe.QR_PREFIX)) {
+        if (QRCode == null) {
             toast("错误的传递参数");
             Log.i(TAG, "wrong params");
             return;

@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by houxg on 2015/1/2.
@@ -117,6 +118,20 @@ public class Log {
     }
 
     public static void printList(String tag, List<? extends Object> list) {
+        if (list == null) {
+            Log.i(tag, "list is null");
+            return;
+        }
+        for (Object val : list) {
+            Log.i(tag, val.toString());
+        }
+    }
+
+    public static void printArray(String tag, Object[] list) {
+        if (list == null) {
+            Log.i(tag, "list is null");
+            return;
+        }
         for (Object val : list) {
             Log.i(tag, val.toString());
         }

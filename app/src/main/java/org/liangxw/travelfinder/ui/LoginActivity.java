@@ -46,7 +46,8 @@ public class LoginActivity extends BaseActivity {
             toast("用户名或密码不能为空");
             return;
         }
-        UserWrapper.logInInBackground("username", "password", new LogInCallback() {
+
+        UserWrapper.logInInBackground(tokens[0], tokens[1], new LogInCallback() {
             public void done(AVUser user, AVException e) {
                 if (user != null) {
                     // 登录成功

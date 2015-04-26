@@ -6,7 +6,6 @@ import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVObject;
 
 import org.liangxw.travelfinder.model.Group;
-import org.liangxw.travelfinder.model.UGMap;
 import org.liangxw.travelfinder.util.logger.Log;
 
 import de.greenrobot.event.EventBus;
@@ -38,10 +37,9 @@ public class Master extends Application implements Thread.UncaughtExceptionHandl
     public void onCreate() {
         super.onCreate();
         AVObject.registerSubclass(Group.class);
-        AVObject.registerSubclass(UGMap.class);
         AVOSCloud.initialize(this, LEANCLOUD_APPID, LEANCLOUD_APPKEY);
 //        AVUser.alwaysUseSubUserClass(User.class);
-        Thread.setDefaultUncaughtExceptionHandler(this);
+//        Thread.setDefaultUncaughtExceptionHandler(this);
     }
 
     @Override

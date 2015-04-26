@@ -1,6 +1,5 @@
 package org.liangxw.travelfinder.ui.visitor;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,9 +14,7 @@ import com.avos.avoscloud.GetCallback;
 import com.avos.avoscloud.SaveCallback;
 
 import org.liangxw.travelfinder.R;
-import org.liangxw.travelfinder.model.Globe;
 import org.liangxw.travelfinder.model.Group;
-import org.liangxw.travelfinder.model.UGMap;
 import org.liangxw.travelfinder.model.UserWrapper;
 import org.liangxw.travelfinder.ui.GroupMapActivity;
 import org.liangxw.travelfinder.util.BaseActivity;
@@ -51,7 +48,6 @@ public class FindGroupResultActivity extends BaseActivity {
 
         btnConfirm.setClickable(false);
         findGroup();
-
     }
 
 
@@ -65,7 +61,7 @@ public class FindGroupResultActivity extends BaseActivity {
                         Log.i(TAG, "not found group");
                     } else {
                         foundedGroup = group;
-                        findRelation(foundedGroup);
+                        findGroupMember(foundedGroup);
                     }
                 } else {
                     Log.w(TAG, "Network error, detail:" + Log.getStackTraceString(e.getCause()));
@@ -74,25 +70,24 @@ public class FindGroupResultActivity extends BaseActivity {
         });
     }
 
-    void findRelation(Group group) {
-        AVQuery<UGMap> avQuery = new AVQuery<>(UGMap.CLASS_NAME);
-        avQuery.whereEqualTo(UGMap.USER_ID, userWrapper.getObjectId());
-        avQuery.whereEqualTo(UGMap.GROUP_ID, foundedGroup.getObjectId());
-        avQuery.findInBackground(new FindCallback<UGMap>() {
+    void findGroupMember(final Group group) {
+        AVQuery<Group> groupAVQuery = new AVQuery<>(Group.CLASS_NAME);
+        groupAVQuery.whereEqualTo(Group.OBJECT_ID, group.getObjectId());
+        groupAVQuery.whereEqualTo("members", UserWrapper.getCurrentUser().getObjectId());
+        groupAVQuery.findInBackground(new FindCallback<Group>() {
             @Override
-            public void done(List<UGMap> ugMaps, AVException e) {
-                if (e == null && ugMaps.size() == 0) {
-                    Log.i(TAG, "not found user-group map");
-                    handler.obtainMessage(CODE_NOT_IN_GROUP).sendToTarget();
-                } else if (e == null && ugMaps.size() != 0) {
-                    Log.i(TAG, "found user-group map, size:" + ugMaps.size());
-                    handler.obtainMessage(CODE_ALREADY_IN_GROUP).sendToTarget();
-                } else {
-                    if (e != null) {
-                        e.printStackTrace();
+            public void done(List<Group> groups, AVException e) {
+                if (e == null) {
+                    if (groups == null || groups.size() == 0) {
+                        Log.i(TAG, "not found member");
+                        handler.obtainMessage(CODE_NOT_IN_GROUP).sendToTarget();
                     } else {
-                        Log.wtf(TAG, "find ugMap, e==null, user:" + userWrapper + ", group:" + foundedGroup);
+                        Log.i(TAG, "user already in group");
+
+                        handler.obtainMessage(CODE_ALREADY_IN_GROUP).sendToTarget();
                     }
+                } else {
+                    Log.w(TAG, "Network error, detail:" + Log.getStackTraceString(e.getCause()));
                 }
             }
         });
@@ -129,10 +124,13 @@ public class FindGroupResultActivity extends BaseActivity {
 
     @OnClick(R.id.btn_confirm)
     void onClicked(View v) {
-        UGMap ugMap = new UGMap();
-        ugMap.setGroupId(foundedGroup.getObjectId());
-        ugMap.setUserId(userWrapper.getObjectId());
-        ugMap.saveInBackground(new SaveCallback() {
+        saveMember();
+    }
+
+    void saveMember() {
+        UserWrapper userWrapper = UserWrapper.getCurrentUser();
+        foundedGroup.addMember(userWrapper.getObjectId());
+        foundedGroup.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
                 if (e == null) {
