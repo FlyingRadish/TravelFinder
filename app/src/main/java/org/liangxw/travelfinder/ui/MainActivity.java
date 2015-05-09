@@ -23,6 +23,7 @@ import org.liangxw.travelfinder.model.Globe;
 import org.liangxw.travelfinder.model.Group;
 import org.liangxw.travelfinder.model.UserWrapper;
 import org.liangxw.travelfinder.service.LocationUpdateService;
+import org.liangxw.travelfinder.ui.addgroup.AddGroupActivity;
 import org.liangxw.travelfinder.ui.guide.CreateGroupActivity;
 import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.SharedPreferencesTool;
@@ -144,7 +145,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Group group = (Group) parent.getItemAtPosition(position);
                 Log.i(TAG, "go to GroupMap");
-                GroupMapActivity.startActivity(MainActivity.this, group.getObjectId(), group.getName());
+                GroupMapActivity.start(MainActivity.this, group.getObjectId(), group.getName());
             }
         });
         setLongClickToDeleteGroupIfIsGuide();

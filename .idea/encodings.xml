@@ -1,20 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/component/Master.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/BaseActivity.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/BaseFragmentActivity.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/CancelableRunnable.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/TimeTool.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/UITool.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/adapter/DataLoader.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/adapter/ListAdapter.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/adapter/LoaderAdapter.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/logger/FileLogger.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/logger/Log.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/logger/LogNode.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/util/logger/LogView.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/app/src/main/res/values/color.xml" charset="UTF-8" />
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/component/zxing/decode/ViewfinderView.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/org/liangxw/travelfinder/component/zxing/encode/QRCodeEncoder.java" charset="UTF-8" />
   </component>
 </project>
-

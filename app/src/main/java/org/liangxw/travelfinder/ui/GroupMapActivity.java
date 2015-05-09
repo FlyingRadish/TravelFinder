@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.ListView;
 
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.LocationSource;
@@ -30,8 +29,8 @@ import org.liangxw.travelfinder.model.UserWrapper;
 import org.liangxw.travelfinder.service.LocationUpdateService;
 import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.CancelableRunnable;
+import org.liangxw.travelfinder.util.PhoneCallTool;
 import org.liangxw.travelfinder.util.TimeTool;
-import org.liangxw.travelfinder.util.adapter.ListAdapter;
 import org.liangxw.travelfinder.util.dialog.BaseDialog;
 import org.liangxw.travelfinder.util.dialog.MessageDialog;
 import org.liangxw.travelfinder.util.logger.Log;
@@ -44,7 +43,7 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 
-public class GroupMapActivity extends BaseActivity implements LocationSource {
+public class GroupMapActivity extends BaseActivity implements LocationSource, AMap.OnInfoWindowClickListener {
 
     private final static String TAG = GroupMapActivity.class.getSimpleName();
     String groupId;
@@ -56,6 +55,7 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
     OnLocationChangedListener mListener;
 
     Updater updater;
+    List<Marker> markers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,8 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
         }
         aMap.setLocationSource(this);// 设置定位监听
         aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
-        aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
+        aMap.setOnInfoWindowClickListener(this);
+        // 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
         // aMap.setMyLocationType()
     }
 
@@ -88,6 +89,7 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
     protected void onResume() {
         super.onResume();
         mapView.onResume();
+        aMap.setMyLocationEnabled(true);
         CancelableRunnable.cancelIfNotNull(updater);
         updater = new Updater(groupId, handler);
         new Thread(updater).start();
@@ -98,6 +100,7 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
         super.onPause();
         mapView.onPause();
         CancelableRunnable.cancelIfNotNull(updater);
+        aMap.setMyLocationEnabled(false);
     }
 
     @Override
@@ -112,12 +115,6 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
         mapView.onDestroy();
     }
 
-    public static void startActivity(Context context, String groupId, String groupName) {
-        Intent intent = new Intent(context, GroupMapActivity.class);
-        intent.putExtra(Globe.GROUP_NAME, groupName);
-        intent.putExtra(Globe.GROUP_ID, groupId);
-        context.startActivity(intent);
-    }
 
     @OnClick({R.id.btn_group_qr_code})
     void onClicked(View v) {
@@ -147,6 +144,7 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
      */
     @Override
     public void deactivate() {
+        Log.i(TAG, "deactivate");
         Master.getEventBus().unregister(this);
         mListener = null;
         Intent intent = new Intent(this, LocationUpdateService.class);
@@ -163,6 +161,14 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
         }
     }
 
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        String[] snippets = marker.getSnippet().split("\n");
+        String phone = snippets[1].replace("手机:","");
+
+        Log.i(TAG, "call:" + phone);
+        PhoneCallTool.call(this, phone);
+    }
 
     static class Updater extends CancelableRunnable {
 
@@ -240,12 +246,6 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
         }
     }
 
-
-    @InjectView(R.id.list_member)
-    ListView listMember;
-    MemberAdapter adapter;
-
-
     final static int NO_MEMBER = 1;
     final static int UPDATE_MEMBER = 2;
     final static int NO_GROUP = 3;
@@ -273,12 +273,6 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
 
                     break;
                 case UPDATE_MEMBER:
-                    if (adapter == null) {
-                        adapter = new MemberAdapter(GroupMapActivity.this, (List<UserWrapper>) msg.obj);
-                        listMember.setAdapter(adapter);
-                    } else {
-                        adapter.changeDataSourse((List<UserWrapper>) msg.obj);
-                    }
                     handleMapMarks((List<UserWrapper>) msg.obj);
                     break;
             }
@@ -288,10 +282,7 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
     };
 
 
-    List<Marker> markers;
-
     private void handleMapMarks(List<UserWrapper> userWrappers) {
-
         if (markers == null) {
             markers = new ArrayList<>(userWrappers.size());
             addMarks(userWrappers);
@@ -314,13 +305,7 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
             marker.setTitle(userWrapper.getNickName());
             AVGeoPoint geoPoint = userWrapper.getLocation();
             marker.setPosition(new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()));
-            String snippet = TimeTool.getBetterTime(userWrapper.getLastLocationUpdateTime());
-            float accuracy = userWrapper.getAccuracy();
-            if (accuracy < 0) {
-                snippet = "精度:未知\n" + snippet;
-            } else {
-                snippet = "精度:" + accuracy + "\n" + snippet;
-            }
+            String snippet =  getSnippet(userWrapper);
             marker.setSnippet(snippet);
         }
     }
@@ -330,42 +315,58 @@ public class GroupMapActivity extends BaseActivity implements LocationSource {
             UserWrapper userWrapper = userWrappers.get(i);
 
             MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.draggable(false);
+
             AVGeoPoint geoPoint = userWrapper.getLocation();
             markerOptions.position(new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude()));
             markerOptions.title(userWrapper.getNickName());
-            String snippet = TimeTool.getBetterTime(userWrapper.getLastLocationUpdateTime());
-            float accuracy = userWrapper.getAccuracy();
-            if (accuracy < 0) {
-                snippet = "精度:未知\n" + snippet;
-            } else {
-                snippet = "精度:" + accuracy + "\n" + snippet;
-            }
+            String snippet = getSnippet(userWrapper);
             markerOptions.snippet(snippet);
             markers.add(aMap.addMarker(markerOptions));
         }
     }
 
-
-    static class MemberAdapter extends ListAdapter<UserWrapper> {
-
-        public MemberAdapter(Context context, List<UserWrapper> data) {
-            super(context, data, R.layout.item_member, new int[]{R.id.text_nick_name, R.id.text_detail, R.id.btn_call});
-        }
-
-        @Override
-        protected void bindData(ViewHolder holder, UserWrapper item, int position) {
-            AVGeoPoint geoPoint = item.getLocation();
-            holder.getTextView(R.id.text_nick_name).setText(item.getNickName());
-            String detail = TimeTool.getBetterTime(item.getLastLocationUpdateTime()) + " 精度:";
-            float accuracy = item.getAccuracy();
-            if (accuracy < 0) {
-                detail += "未知";
-            } else {
-                detail += (int) accuracy + "m";
-            }
-            holder.getTextView(R.id.text_detail).setText(detail);
-        }
+    public static void start(Context context, String groupId, String groupName) {
+        Intent intent = new Intent(context, GroupMapActivity.class);
+        intent.putExtra(Globe.GROUP_NAME, groupName);
+        intent.putExtra(Globe.GROUP_ID, groupId);
+        context.startActivity(intent);
     }
+
+
+    private String getSnippet(UserWrapper userWrapper) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("精度:");
+        float accuracy = userWrapper.getAccuracy();
+        if (accuracy < 0) {
+            builder.append("未知\n");
+        } else {
+            builder.append(accuracy).append("m\n");
+        }
+        builder.append("手机:").append(userWrapper.getMobilePhoneNumber()).append("\n");
+        builder.append(TimeTool.getBetterTime(userWrapper.getLastLocationUpdateTime()));
+
+        return builder.toString();
+    }
+
+//    static class MemberAdapter extends ListAdapter<UserWrapper> {
+//
+//        public MemberAdapter(Context context, List<UserWrapper> data) {
+//            super(context, data, R.layout.item_member, new int[]{R.id.text_nick_name, R.id.text_detail, R.id.btn_call});
+//        }
+//
+//        @Override
+//        protected void bindData(ViewHolder holder, UserWrapper item, int position) {
+//            AVGeoPoint geoPoint = item.getLocation();
+//            holder.getTextView(R.id.text_nick_name).setText(item.getNickName());
+//            String detail = TimeTool.getBetterTime(item.getLastLocationUpdateTime()) + " 精度:";
+//            float accuracy = item.getAccuracy();
+//            if (accuracy < 0) {
+//                detail += "未知";
+//            } else {
+//                detail += (int) accuracy + "m";
+//            }
+//            holder.getTextView(R.id.text_detail).setText(detail);
+//        }
+//    }
 
 }

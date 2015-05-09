@@ -3,13 +3,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="4dp"
+    android:padding="16dp"
     >
 
     <TextView
         android:id="@+id/text_group_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/textsize_20"
         android:text="群名字"/>
 
 </RelativeLayout>

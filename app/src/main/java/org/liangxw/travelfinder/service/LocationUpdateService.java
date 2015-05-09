@@ -51,6 +51,9 @@ public class LocationUpdateService extends Service implements AMapLocationListen
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if(intent==null){
+            return START_STICKY;
+        }
         String action = intent.getAction();
         if (action == null) {
             removeListener();

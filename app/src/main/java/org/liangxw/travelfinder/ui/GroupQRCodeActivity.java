@@ -1,10 +1,16 @@
 package org.liangxw.travelfinder.ui;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.widget.ImageView;
+
+import com.google.zxing.WriterException;
 
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.component.ActivityStack;
+import org.liangxw.travelfinder.component.zxing.encode.QRCodeEncoder;
+import org.liangxw.travelfinder.model.Globe;
 import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.logger.Log;
 
@@ -14,11 +20,16 @@ public class GroupQRCodeActivity extends BaseActivity implements ActivityStack.A
     private final static String TAG = GroupQRCodeActivity.class.getSimpleName();
 
     String QRCode;
+    ImageView imgQRCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_group_qr_code);
         super.onCreate(savedInstanceState);
+
+        imgQRCode = (ImageView) findViewById(R.id.img_qr_code);
+
+
 
         QRCode = getIntent().getAction();
         Log.i(TAG, "QRCode:" + QRCode);
@@ -27,11 +38,33 @@ public class GroupQRCodeActivity extends BaseActivity implements ActivityStack.A
             Log.i(TAG, "wrong params");
             return;
         }
-        genarateQRCode(QRCode);
+        QRCode = Globe.QR_PREFIX + QRCode;
+        imgQRCode.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                genarateQRCode(QRCode);
+            }
+        },2000);
+
     }
 
-    private void genarateQRCode(String qrCode) {
+    Bitmap bitmap;
 
+    private void genarateQRCode(String qrCode) {
+        try {
+            bitmap = QRCodeEncoder.encode(qrCode, imgQRCode.getWidth(), imgQRCode.getHeight());
+            imgQRCode.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            toast("生成二维码失败");
+            Log.i(TAG, "failed to create QRCode");
+            e.printStackTrace();
+            finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
