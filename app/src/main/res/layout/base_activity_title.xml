@@ -6,14 +6,12 @@
     android:background="@color/theme"
     android:elevation="2dp">
 
-    <Button
+    <ImageButton
         android:id="@+id/btn_back"
         android:layout_width="52dp"
         android:layout_height="match_parent"
         android:background="@color/selector_btn_title"
-        android:text="返"
-        android:textSize="@dimen/title_action_text_size"
-        android:textColor="@color/white"
+        android:src="@drawable/back"
         />
 
     <TextView

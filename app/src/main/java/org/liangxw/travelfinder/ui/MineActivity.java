@@ -29,7 +29,6 @@ public class MineActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_mine);
         super.onCreate(savedInstanceState);
 
         userWrapper = UserWrapper.getCurrentUser();
@@ -45,6 +44,11 @@ public class MineActivity extends BaseActivity {
         textNickName.setText(userWrapper.getNickName());
         textUserName.setText("登录名:" + userWrapper.getUsername());
         textPhone.setText(userWrapper.getMobilePhoneNumber());
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_mine;
     }
 
 

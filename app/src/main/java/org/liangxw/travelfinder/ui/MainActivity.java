@@ -58,9 +58,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
-        setLeftActionText("我");
         super.onCreate(savedInstanceState);
+        setLeftActionResource(R.drawable.people);
         Log.i(TAG, "start");
         if (!isLogin()) {
             needLogin = true;
@@ -69,15 +68,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             return;
         }
         if (userWrapper.getType() == UserWrapper.TYPE_GUIDE) {
-            addAction(R.id.btn_create_group, "建", this);
-            addAction(R.id.btn_add_group, "加", this);
-        } else if (userWrapper.getType() == UserWrapper.TYPE_VISITOR) {
-            addAction(R.id.btn_add_group, "加", this);
+            addAction(R.id.btn_create_group, R.drawable.group_add, this);
         }
-
+        addAction(R.id.btn_add_group, R.drawable.add, this);
         ButterKnife.inject(this);
 
         init();
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_main;
     }
 
     void init() {

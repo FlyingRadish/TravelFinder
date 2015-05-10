@@ -24,7 +24,6 @@ public class GroupQRCodeActivity extends BaseActivity implements ActivityStack.A
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_group_qr_code);
         super.onCreate(savedInstanceState);
 
         imgQRCode = (ImageView) findViewById(R.id.img_qr_code);
@@ -46,6 +45,11 @@ public class GroupQRCodeActivity extends BaseActivity implements ActivityStack.A
             }
         },2000);
 
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_group_qr_code;
     }
 
     Bitmap bitmap;

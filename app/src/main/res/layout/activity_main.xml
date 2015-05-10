@@ -29,10 +29,16 @@
             android:layout_marginRight="16dp"
             android:text="报告我的位置" />
     </RelativeLayout>
+    <View
+        android:id="@+id/divider"
+        android:layout_below="@id/panel_switch"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_400"/>
 
     <ListView
         android:id="@+id/list_group"
-        android:layout_below="@id/panel_switch"
+        android:layout_below="@id/divider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="invisible"

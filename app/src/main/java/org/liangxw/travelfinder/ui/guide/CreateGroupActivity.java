@@ -28,10 +28,14 @@ public class CreateGroupActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_create_group);
         super.onCreate(savedInstanceState);
 
         ButterKnife.inject(this);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_create_group;
     }
 
     @InjectView(R.id.edit_group_name)

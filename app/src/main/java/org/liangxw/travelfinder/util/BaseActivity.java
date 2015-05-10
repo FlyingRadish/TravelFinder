@@ -1,6 +1,5 @@
 package org.liangxw.travelfinder.util;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -8,6 +7,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +21,13 @@ import org.liangxw.travelfinder.util.logger.Log;
  * Activity基础类
  * Created by houxg on 2014/12/14.
  */
-public class BaseActivity extends ActionBarActivity{
+public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(getLayoutId());
+
         setTitle(getTitle());
         View view = findViewById(R.id.btn_back);
         if (view != null) {
@@ -38,6 +40,8 @@ public class BaseActivity extends ActionBarActivity{
         }
         ActivityStack.getInstance(this).add(this);
     }
+
+    protected abstract int getLayoutId();
 
     @Override
     protected void onDestroy() {
@@ -52,7 +56,7 @@ public class BaseActivity extends ActionBarActivity{
     @Override
     public void setTitle(CharSequence title) {
         TextView textView = (TextView) findViewById(R.id.text_activity_title);
-        if(textView!=null){
+        if (textView != null) {
             textView.setText(title);
         }
     }
@@ -111,6 +115,16 @@ public class BaseActivity extends ActionBarActivity{
         linearLayout.addView(button, new LinearLayout.LayoutParams(UITool.dp2px(this, 50), ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
+    public void addAction(int id, int resId, View.OnClickListener listener) {
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.panel_title_right);
+        ImageButton button = new ImageButton(this, null);
+        button.setId(id);
+        button.setImageResource(resId);
+        button.setOnClickListener(listener);
+        button.setBackgroundResource(R.color.selector_btn_title);
+        linearLayout.addView(button, new LinearLayout.LayoutParams(UITool.dp2px(this, 50), ViewGroup.LayoutParams.MATCH_PARENT));
+    }
+
     public void setLeftActionVisibility(boolean isHide) {
         if (isHide) {
             findViewById(R.id.btn_back).setVisibility(View.INVISIBLE);
@@ -120,8 +134,8 @@ public class BaseActivity extends ActionBarActivity{
     }
 
 
-    public void setLeftActionText(String text) {
-        Button button = (Button) findViewById(R.id.btn_back);
-        button.setText(text);
+    public void setLeftActionResource(int resId) {
+        ImageButton button = (ImageButton) findViewById(R.id.btn_back);
+        button.setImageResource(resId);
     }
 }

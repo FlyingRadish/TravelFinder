@@ -2,6 +2,7 @@ package org.liangxw.travelfinder.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -59,9 +60,8 @@ public class GroupMapActivity extends BaseActivity implements LocationSource, AM
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_group_map);
         super.onCreate(savedInstanceState);
-        addAction(R.id.btn_group_qr_code, "码", null);
+        addAction(R.id.btn_group_qr_code, R.drawable.qr_code, null);
         ButterKnife.inject(this);
 
         groupId = getIntent().getStringExtra(Globe.GROUP_ID);
@@ -72,6 +72,11 @@ public class GroupMapActivity extends BaseActivity implements LocationSource, AM
         mapView.onCreate(savedInstanceState);
         initMap();
 
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_group_map;
     }
 
     void initMap() {

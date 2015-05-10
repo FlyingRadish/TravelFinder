@@ -33,10 +33,14 @@ public class RegisterActivity extends BaseActivity implements ActivityStack.Acti
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_register);
         super.onCreate(savedInstanceState);
         ButterKnife.inject(this);
         Log.i(TAG, "onCreate");
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_register;
     }
 
     @InjectView(R.id.edit_user_name)
