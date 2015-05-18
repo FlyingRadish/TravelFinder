@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setLeftActionResource(R.drawable.people);
-        Log.i(TAG, "start");
+        Log.i(TAG, "getStartIntent");
         if (!isLogin()) {
             needLogin = true;
             Log.i(TAG, "need login");
@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Group group = (Group) parent.getItemAtPosition(position);
                 Log.i(TAG, "go to GroupMap");
-                GroupMapActivity.start(MainActivity.this, group.getObjectId(), group.getName());
+                GroupMapActivity.getStartIntent(MainActivity.this, group.getObjectId(), group.getName());
             }
         });
         setLongClickToDeleteGroupIfIsGuide();

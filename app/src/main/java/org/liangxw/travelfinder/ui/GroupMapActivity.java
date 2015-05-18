@@ -11,18 +11,22 @@ import android.view.View;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
+import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.Marker;
 import com.amap.api.maps2d.model.MarkerOptions;
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVQuery;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.FindCallback;
 import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.GetDataCallback;
 
 import org.liangxw.travelfinder.R;
 import org.liangxw.travelfinder.component.Master;
+import org.liangxw.travelfinder.model.Avatar;
 import org.liangxw.travelfinder.model.GEOEvent;
 import org.liangxw.travelfinder.model.Globe;
 import org.liangxw.travelfinder.model.Group;
@@ -32,6 +36,7 @@ import org.liangxw.travelfinder.util.BaseActivity;
 import org.liangxw.travelfinder.util.CancelableRunnable;
 import org.liangxw.travelfinder.util.PhoneCallTool;
 import org.liangxw.travelfinder.util.TimeTool;
+import org.liangxw.travelfinder.util.UITool;
 import org.liangxw.travelfinder.util.dialog.BaseDialog;
 import org.liangxw.travelfinder.util.dialog.MessageDialog;
 import org.liangxw.travelfinder.util.logger.Log;
@@ -326,11 +331,25 @@ public class GroupMapActivity extends BaseActivity implements LocationSource, AM
             markerOptions.title(userWrapper.getNickName());
             String snippet = getSnippet(userWrapper);
             markerOptions.snippet(snippet);
-            markers.add(aMap.addMarker(markerOptions));
+            final Marker marker = aMap.addMarker(markerOptions);
+
+            AVFile avFile = userWrapper.getAvatar();
+            if(avFile!=null){
+                avFile.getDataInBackground(new GetDataCallback() {
+                    @Override
+                    public void done(byte[] bytes, AVException e) {
+                        if (marker != null && marker.isVisible()) {
+                            Bitmap bitmap = Avatar.getThumbNailBitmap(bytes, UITool.dp2px(GroupMapActivity.this, 16), UITool.dp2px(GroupMapActivity.this, 16));
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                        }
+                    }
+                });
+            }
+            markers.add(marker);
         }
     }
 
-    public static void start(Context context, String groupId, String groupName) {
+    public static void getStartIntent(Context context, String groupId, String groupName) {
         Intent intent = new Intent(context, GroupMapActivity.class);
         intent.putExtra(Globe.GROUP_NAME, groupName);
         intent.putExtra(Globe.GROUP_ID, groupId);

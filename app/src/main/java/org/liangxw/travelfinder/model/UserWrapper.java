@@ -1,6 +1,7 @@
 package org.liangxw.travelfinder.model;
 
 import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.AVUser;
 import com.avos.avoscloud.LogInCallback;
@@ -32,6 +33,7 @@ public class UserWrapper {
     public final static String LOCATION = "location";
     public final static String ACCURACY = "accuracy";
     public final static String LOCATION_UPDATE_TIME = "locationUpdateTime";
+    public final static String AVATAR = "avatar";
 
     public UserWrapper() {
         avUser = new AVUser();
@@ -172,6 +174,15 @@ public class UserWrapper {
 
     public void logOut(){
         avUser.logOut();
+    }
+
+
+    public AVFile getAvatar(){
+        return avUser.getAVFile(AVATAR);
+    }
+
+    public void setAvatar(AVFile avatar){
+        avUser.put(AVATAR, avatar);
     }
 
     @Override

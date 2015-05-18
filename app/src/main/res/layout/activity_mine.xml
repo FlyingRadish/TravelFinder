@@ -19,15 +19,16 @@
             android:layout_weight="6"
             android:background="@color/white"
             android:paddingBottom="8dp"
-            android:paddingTop="8dp"
+            android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:paddingLeft="16dp">
+            android:paddingTop="8dp">
 
             <ImageView
                 android:id="@+id/img_avatar"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_centerInParent="true"
+                android:scaleType="fitXY"
                 android:src="@drawable/duang" />
 
             <TextView
@@ -45,8 +46,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/text_nick_name"
-                android:layout_marginTop="8dp"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
                 android:text="登录名：xiaog" />
         </RelativeLayout>
 
@@ -60,12 +61,12 @@
                 android:id="@+id/panel_modify_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="12dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/white"
                 android:paddingBottom="12dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/white">
+                android:paddingTop="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -79,22 +80,23 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="10086"
-                    android:textSize="@dimen/textsize_16"
-                    android:textColor="@color/gray_400" />
+                    android:textColor="@color/gray_400"
+                    android:textSize="@dimen/textsize_16" />
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/panel_modify_password"
-                android:layout_below="@id/panel_modify_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="12dp"
+                android:layout_below="@id/panel_modify_phone"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:clickable="true"
                 android:paddingBottom="12dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:layout_marginTop="1dp"
-                android:background="@color/white">
+                android:paddingTop="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -108,14 +110,14 @@
                 android:id="@+id/btn_logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_marginBottom="32dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_alignParentBottom="true"
+                android:paddingBottom="12dp"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp"
                 android:paddingTop="12dp"
-                android:paddingBottom="12dp"
                 android:text="注销"
                 android:textSize="24dp" />
 
